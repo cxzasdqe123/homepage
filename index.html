@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>出走計畫 Outdoor Project | 日本質感旅遊・二人成團・滑雪潛水考照</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --yellow:      #F2C94C;
+            --yellow-dk:   #D4A825;
+            --yellow-lt:   #FDF3D0;
+            --teal:        #4BBDD6;
+            --teal-dk:     #2E9DB8;
+            --teal-lt:     #E6F7FB;
+            --brown:       #2D2016;
+            --brown-md:    #4A3728;
+            --gray-soft:   #F5F4F2;
+            --gray-body:   #5A5451;
+            --white:       #FEFEFE;
+            --nav-h:       72px;
+            --radius-card: 20px;
+            --radius-pill: 999px;
+            --transition: 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            color: var(--brown);
+            background: var(--white);
+            line-height: 1.75;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Noto Serif TC', serif;
+            letter-spacing: 0.04em;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        #navbar.scrolled {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            background: rgba(255,255,255,0.98);
+        }
+
+        .itinerary-btn.active {
+            background: var(--teal-lt);
+            border-color: var(--teal);
+            box-shadow: 0 4px 15px rgba(75,189,214,0.1);
+        }
+
+        .quiz-opt {
+            transition: all var(--transition);
+        }
+        .quiz-opt:hover {
+            background: rgba(75,189,214,0.1);
+            border-color: var(--teal);
+            transform: translateY(-2px);
+        }
+
+        #mobile-float-cta.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* ── FAQ ── */
+        .faq-item {
+            border-bottom: 1px solid #ede9e4;
+        }
+        .faq-trigger {
+            width: 100%;
+            text-align: left;
+            padding: 1.25rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--brown);
+            background: none;
+            border: none;
+            transition: color 0.2s;
+            line-height: 1.5;
+        }
+        @media (min-width: 768px) {
+            .faq-trigger { font-size: 1rem; padding: 1.5rem 0; }
+        }
+        .faq-trigger:hover { color: var(--teal-dk); }
+        .faq-trigger .faq-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gray-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.25s, transform 0.35s;
+        }
+        .faq-trigger.open .faq-icon {
+            background: var(--teal);
+            transform: rotate(45deg);
+        }
+        .faq-trigger.open .faq-icon i { color: white; }
+        .faq-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1), padding 0.3s;
+            color: var(--gray-body);
+            font-size: 0.9rem;
+            line-height: 1.85;
+            padding-bottom: 0;
+        }
+        .faq-body.open {
+            max-height: 400px;
+            padding-bottom: 1.5rem;
+        }
+
+        @media (max-width: 767px) {
+            :root { --nav-h: 64px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 導覽列 -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-[100] h-[var(--nav-h)] transition-all duration-300 border-b border-gray-50 bg-white/90 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto h-full px-6 flex items-center justify-between">
+        <a href="#" class="h-9 md:h-12">
+            <img src="https://drive.google.com/thumbnail?id=1muxHnTnUmu6DFqnHyMy_-burvdzVJRZo&sz=w500" 
+                 alt="Logo" class="h-full w-auto object-contain" style="mix-blend-mode: multiply;">
+        </a>
+
+        <div class="hidden md:flex items-center gap-10 text-sm font-semibold text-gray-600">
+            <a href="index.html" class="hover:text-[var(--teal)] transition-colors">首頁</a>
+            <a href="itineraries.html" class="hover:text-[var(--teal)] transition-colors">精選行程</a>
+            <a href="about.html" class="hover:text-[var(--teal)] transition-colors">關於出走</a>
+            <a href="#contact" class="hover:text-[var(--teal)] transition-colors text-[var(--white)] bg-[var(--teal)] px-6 py-2 rounded-full shadow-lg shadow-teal-100 hover:bg-[var(--teal-dk)]">立即諮詢</a>
+        </div>
+
+        <button class="md:hidden text-2xl text-[var(--brown)]" id="ham-btn">
+            <i class="fa-solid fa-bars-staggered"></i>
+        </button>
+    </div>
+
+    <div id="mobile-menu" class="absolute top-full left-0 right-0 bg-white border-b-4 border-[var(--teal)] p-8 flex flex-col gap-5 text-center font-bold text-base shadow-2xl opacity-0 pointer-events-none transition-all duration-300 translate-y-[-10px]">
+        <a href="itineraries.html" class="mob-link">精選行程</a>
+        <a href="about.html" class="mob-link">關於出走</a>
+        <a href="#explore" class="mob-link">行程測驗</a>
+        <a href="#faq" class="mob-link">常見問題</a>
+        <a href="https://lin.ee/nsfyYPj" target="_blank" class="bg-[var(--teal)] text-white py-4 rounded-2xl shadow-xl">LINE 預約諮詢</a>
+    </div>
+</nav>
+
+<!-- 英雄輪播 -->
+<section id="hero" class="relative h-[85vh] min-h-[500px] bg-black overflow-hidden">
+    <div class="slide absolute inset-0 active opacity-100 transition-opacity duration-1000 z-10" id="slide-0">
+        <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=2070" class="w-full h-full object-cover scale-105 transition-transform duration-[10s]" alt="日本風景">
+        <div class="absolute inset-0 bg-black/40"></div>
+        <div class="absolute inset-0 flex flex-col items-center justify-end pb-24 md:pb-32 px-5 md:px-6 text-center">
+            <span class="text-[var(--yellow)] tracking-[0.3em] md:tracking-[0.4em] text-[10px] md:text-xs font-black mb-3 md:mb-4 uppercase">Premium Custom Travel</span>
+            <h1 class="text-white text-3xl md:text-6xl font-black mb-4 md:mb-6 leading-snug">不再遷就，兩人即刻出發</h1>
+            <p class="text-white/80 text-sm md:text-lg font-light mb-7 md:mb-10 max-w-xs md:max-w-xl">資深教練踩點，為您規劃一場不將就的日本深度之旅。</p>
+            <a href="#explore" class="bg-[var(--yellow)] text-[var(--brown)] px-8 md:px-10 py-3.5 md:py-4 rounded-full font-bold text-base md:text-lg hover:scale-105 transition-transform">開始探索您的 DNA</a>
+        </div>
+    </div>
+
+    <div class="slide absolute inset-0 opacity-0 transition-opacity duration-1000 z-0" id="slide-1">
+        <img src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?q=80&w=2070" class="w-full h-full object-cover scale-105 transition-transform duration-[10s]" alt="滑雪">
+        <div class="absolute inset-0 bg-black/40"></div>
+        <div class="absolute inset-0 flex flex-col items-center justify-end pb-24 md:pb-32 px-5 md:px-6 text-center">
+            <span class="text-[var(--teal)] tracking-[0.3em] md:tracking-[0.4em] text-[10px] md:text-xs font-black mb-3 md:mb-4 uppercase">Expert Sports Adventure</span>
+            <h1 class="text-white text-3xl md:text-6xl font-black mb-4 md:mb-6 leading-snug">挑戰粉雪，或是潛入蔚藍</h1>
+            <p class="text-white/80 text-sm md:text-lg font-light mb-7 md:mb-10 max-w-xs md:max-w-xl">專業中文教練一對一對接，安全與冒險的完美平衡。</p>
+            <a href="https://lin.ee/nsfyYPj" class="bg-[var(--teal)] text-white px-8 md:px-10 py-3.5 md:py-4 rounded-full font-bold text-base md:text-lg hover:scale-105 transition-transform">諮詢專業教練</a>
+        </div>
+    </div>
+
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex gap-3">
+        <button onclick="goToSlide(0)" class="sdot w-8 h-1.5 rounded-full bg-white/40 transition-all active"></button>
+        <button onclick="goToSlide(1)" class="sdot w-8 h-1.5 rounded-full bg-white/40 transition-all"></button>
+    </div>
+</section>
+
+<!-- 精選行程 -->
+<section id="flagship" class="py-16 md:py-24 px-4 md:px-6">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-10 md:mb-16 reveal">
+            <span class="bg-[var(--teal-lt)] text-[var(--teal)] px-4 py-1.5 rounded-full text-xs font-bold tracking-widest mb-3 md:mb-4 inline-block">CURATED ITINERARIES</span>
+            <h2 class="text-2xl md:text-5xl font-black text-[var(--brown)] mb-3 md:mb-4">本季精選客製計畫</h2>
+            <p class="text-gray-500 font-light text-sm md:text-base">職人親自採點，為您量身打造的高質感行程。</p>
+        </div>
+
+        <!-- 手機：icon pill 橫排選單 -->
+        <div class="flex md:hidden gap-2 overflow-x-auto no-scrollbar pb-4 mb-4" id="itinerary-pills">
+            <!-- JS 注入 -->
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-5 md:gap-8 items-stretch">
+            <!-- 桌機側邊列表 -->
+            <div id="itinerary-list" class="hidden md:flex md:flex-col gap-3 md:w-80 flex-shrink-0"></div>
+
+            <div id="itinerary-display" class="flex-grow bg-white border border-gray-100 rounded-[24px] md:rounded-[32px] overflow-hidden shadow-2xl shadow-gray-100 transition-all duration-500 reveal">
+                <div class="flex flex-col md:flex-row h-full">
+                    <div class="md:w-1/2 h-52 md:h-auto relative">
+                        <img id="disp-img" src="" alt="行程" class="w-full h-full object-cover">
+                        <span id="disp-tag" class="absolute top-4 left-4 md:top-6 md:left-6 bg-[var(--teal)] text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter"></span>
+                    </div>
+                    <div class="md:w-1/2 p-6 md:p-12 flex flex-col justify-center">
+                        <h3 id="disp-title" class="text-xl md:text-3xl font-black mb-3 md:mb-4 text-[var(--brown)]"></h3>
+                        <p id="disp-desc" class="text-gray-500 mb-5 md:mb-8 font-light text-sm leading-relaxed"></p>
+                        <div id="disp-features" class="space-y-2 md:space-y-3 mb-7 md:mb-10"></div>
+                        <a href="https://lin.ee/nsfyYPj" target="_blank" class="inline-flex items-center gap-3 bg-[var(--brown)] text-white px-6 md:px-8 py-3.5 md:py-4 rounded-2xl font-bold text-sm md:text-base hover:bg-[var(--teal)] transition-colors self-start shadow-xl">
+                            諮詢客製細節 <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 關於我們 -->
+<section id="founder" class="py-16 md:py-24 bg-white px-4 md:px-6">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-16">
+        <div class="md:w-1/2 relative reveal w-full">
+            <div class="absolute -top-4 -left-4 w-full h-full bg-[var(--teal-lt)] rounded-3xl -z-10"></div>
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2070" 
+                 alt="Founder" class="rounded-3xl shadow-2xl border-4 border-white w-full aspect-[4/3] object-cover">
+            <div class="absolute -bottom-6 -right-6 bg-[var(--yellow)] p-5 md:p-6 rounded-2xl shadow-xl border-4 border-white hidden md:block">
+                <p class="text-[var(--brown)] font-black text-xl leading-none">Senior</p>
+                <p class="text-[var(--brown-md)] text-[10px] font-bold tracking-[0.2em] mt-1">EXPLORER</p>
+            </div>
+        </div>
+        <div class="md:w-1/2 reveal">
+            <span class="text-[var(--teal)] font-black text-xs tracking-widest block mb-3 md:mb-4 uppercase">Behind the Brand</span>
+            <h2 class="text-2xl md:text-5xl font-black text-[var(--brown)] mb-4 md:mb-6 leading-snug">不賣沒去過的行程，<br>我們就是最愛玩的人。</h2>
+            <p class="text-gray-600 mb-6 md:mb-8 text-base md:text-lg font-light leading-loose">
+                創辦人具備 <strong class="text-[var(--brown)] font-bold">SUP 與自由潛水專業教練資格</strong>，深耕日本旅遊十餘年。我們將親自踩點、反覆確認細節的精華，轉化為您專屬的出走提案。
+            </p>
+            <div class="grid grid-cols-2 gap-4 md:gap-6">
+                <div class="flex items-center gap-3 md:gap-4 bg-[var(--gray-soft)] p-4 rounded-2xl">
+                    <div class="w-10 h-10 md:w-12 md:h-12 bg-[var(--teal-lt)] rounded-xl flex items-center justify-center text-[var(--teal)] text-lg md:text-xl flex-shrink-0">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <p class="font-bold text-xs md:text-sm">二人即可成行</p>
+                </div>
+                <div class="flex items-center gap-3 md:gap-4 bg-[var(--gray-soft)] p-4 rounded-2xl">
+                    <div class="w-10 h-10 md:w-12 md:h-12 bg-[var(--yellow-lt)] rounded-xl flex items-center justify-center text-[var(--yellow-dk)] text-lg md:text-xl flex-shrink-0">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </div>
+                    <p class="font-bold text-xs md:text-sm">專業教練對接</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 旅人 DNA 測驗 -->
+<section id="explore" class="py-16 md:py-24 bg-[var(--brown)] px-4 md:px-6 relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+        <div class="absolute top-[20%] left-[10%] w-96 h-96 bg-[var(--teal)] rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-[20%] right-[10%] w-96 h-96 bg-[var(--yellow)] rounded-full blur-[120px]"></div>
+    </div>
+
+    <div class="max-w-4xl mx-auto relative z-10">
+        <div class="text-center mb-10 md:mb-12 reveal">
+            <span class="text-[var(--yellow)] font-bold text-xs tracking-[0.3em] uppercase block mb-3 md:mb-4">Traveler Personality Test</span>
+            <h2 class="text-white text-2xl md:text-5xl font-black mb-3 md:mb-4">你是哪一種旅人？</h2>
+            <p class="text-white/60 font-light text-sm md:text-base">花 30 秒，讓我們為您匹配最適合的出走提案。</p>
+        </div>
+
+        <div id="quiz-card" class="bg-white/5 border border-white/10 backdrop-blur-xl rounded-[28px] md:rounded-[40px] p-6 md:p-16 shadow-2xl">
+            <div class="h-1 bg-white/10 rounded-full mb-8 md:mb-12 overflow-hidden">
+                <div id="quiz-progress" class="h-full bg-gradient-to-right from-[var(--teal)] to-[var(--yellow)] w-0 transition-all duration-500"></div>
+            </div>
+            <div id="quiz-content" class="min-h-[280px] md:min-h-[300px] flex flex-col items-center justify-center text-center"></div>
+        </div>
+    </div>
+</section>
+
+<!-- 客製化旅遊優勢 -->
+<section class="bg-[var(--teal-lt)] px-4 md:px-6 py-14 md:py-20">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-8 md:mb-14 reveal">
+            <span class="bg-white text-[var(--teal)] px-4 py-1.5 rounded-full text-xs font-bold tracking-widest mb-3 inline-block">WHY CUSTOM TRAVEL</span>
+            <h2 class="text-2xl md:text-4xl font-black text-[var(--brown)]">客製化旅遊，與套裝行程的差異</h2>
+        </div>
+
+        <!-- 手機：手風琴 -->
+        <div class="md:hidden space-y-3 reveal" id="adv-accordion">
+            <!-- JS 注入 -->
+        </div>
+
+        <!-- 桌機：卡片格 -->
+        <div class="hidden md:grid md:grid-cols-4 gap-6">
+            <div class="bg-white rounded-2xl p-8 reveal" style="transition-delay:0s">
+                <div class="w-12 h-12 bg-[var(--teal-lt)] rounded-xl flex items-center justify-center text-[var(--teal)] text-2xl mb-5"><i class="fa-solid fa-sliders"></i></div>
+                <h3 class="font-black text-lg text-[var(--brown)] mb-2">完全照您步調</h3>
+                <p class="text-gray-500 text-sm font-light leading-relaxed">幾點起床、想走幾天、要玩什麼——全部由您說了算，不用配合陌生人的日程。</p>
+            </div>
+            <div class="bg-white rounded-2xl p-8 reveal" style="transition-delay:0.08s">
+                <div class="w-12 h-12 bg-[var(--yellow-lt)] rounded-xl flex items-center justify-center text-[var(--yellow-dk)] text-2xl mb-5"><i class="fa-solid fa-map-pin"></i></div>
+                <h3 class="font-black text-lg text-[var(--brown)] mb-2">親踩過才推薦</h3>
+                <p class="text-gray-500 text-sm font-light leading-relaxed">我們不賣沒去過的地方。每一個景點、餐廳與住宿，都是教練親身體驗後嚴選。</p>
+            </div>
+            <div class="bg-white rounded-2xl p-8 reveal" style="transition-delay:0.16s">
+                <div class="w-12 h-12 bg-[var(--teal-lt)] rounded-xl flex items-center justify-center text-[var(--teal)] text-2xl mb-5"><i class="fa-solid fa-graduation-cap"></i></div>
+                <h3 class="font-black text-lg text-[var(--brown)] mb-2">邊玩邊考照</h3>
+                <p class="text-gray-500 text-sm font-light leading-relaxed">滑雪或自由潛水，旅途中就能完成考照。中文教練指導，安全零距離學習。</p>
+            </div>
+            <div class="bg-white rounded-2xl p-8 reveal" style="transition-delay:0.24s">
+                <div class="w-12 h-12 bg-[var(--yellow-lt)] rounded-xl flex items-center justify-center text-[var(--yellow-dk)] text-2xl mb-5"><i class="fa-solid fa-users-between-lines"></i></div>
+                <h3 class="font-black text-lg text-[var(--brown)] mb-2">兩人就能出發</h3>
+                <p class="text-gray-500 text-sm font-light leading-relaxed">最少只需兩人，無需湊團等人。情侶、夫妻或好友，說走就走不將就。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 常見問題 FAQ -->
+<section id="faq" class="py-16 md:py-24 px-4 md:px-6 bg-white">
+    <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-10 md:mb-16 reveal">
+            <span class="bg-[var(--teal-lt)] text-[var(--teal)] px-4 py-1.5 rounded-full text-xs font-bold tracking-widest mb-3 md:mb-4 inline-block">FAQ</span>
+            <h2 class="text-2xl md:text-5xl font-black text-[var(--brown)] mb-3 md:mb-4">常見問題</h2>
+            <p class="text-gray-500 font-light text-sm md:text-base">出發前最常問的事，我們一次說清楚。</p>
+        </div>
+        <div id="faq-list" class="reveal"></div>
+    </div>
+</section>
+
+<!-- 聯絡我們 -->
+<section id="contact" class="py-16 md:py-24 bg-[var(--yellow)] px-4 md:px-6 text-center">
+    <div class="max-w-3xl mx-auto reveal">
+        <h2 class="text-3xl md:text-6xl font-black text-[var(--brown)] mb-4 md:mb-6 leading-snug">把願望清單，<br>交給專業教練規劃。</h2>
+        <p class="text-[var(--brown-md)] text-base md:text-xl font-light mb-8 md:mb-12">還有問題？或是準備好出發了？隨時找我們。</p>
+        <a href="https://lin.ee/nsfyYPj" target="_blank" class="inline-flex items-center gap-3 md:gap-4 bg-[var(--brown)] text-white px-8 md:px-12 py-4 md:py-5 rounded-2xl font-black text-lg md:text-xl hover:scale-105 transition-transform shadow-2xl">
+            <i class="fa-brands fa-line text-2xl md:text-3xl text-[#00B900]"></i> 諮詢專屬行程
+        </a>
+    </div>
+</section>
+
+<!-- 頁尾 -->
+<footer class="bg-[var(--brown)] py-20 px-6">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 text-white/50 text-sm">
+        <div class="md:col-span-2">
+            <img src="https://drive.google.com/thumbnail?id=1muxHnTnUmu6DFqnHyMy_-burvdzVJRZo&sz=w500" alt="Logo" class="h-16 mb-8 grayscale brightness-[10]">
+            <p class="max-w-sm font-light leading-loose">我們不只規劃行程，我們自己就活在旅行中。專注於日本質感、運動與深度文化的客製化提案。</p>
+        </div>
+        <div>
+            <h4 class="text-white font-bold mb-6 tracking-widest uppercase text-xs">Explore</h4>
+            <ul class="space-y-4 font-light">
+                <li><a href="#" class="hover:text-white transition-colors">日光東京奢旅</a></li>
+                <li><a href="#" class="hover:text-white transition-colors">北海道粉雪挑戰</a></li>
+                <li><a href="#" class="hover:text-white transition-colors">南九州探險之旅</a></li>
+                <li><a href="#" class="hover:text-white transition-colors">沖繩潛水考照</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="text-white font-bold mb-6 tracking-widest uppercase text-xs">Follow Us</h4>
+            <div class="flex gap-6 text-2xl">
+                <a href="#" class="hover:text-[var(--teal)] transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" class="hover:text-[var(--teal)] transition-colors"><i class="fa-brands fa-facebook"></i></a>
+                <a href="#" class="hover:text-[var(--teal)] transition-colors"><i class="fa-brands fa-line"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="max-w-7xl mx-auto mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+        <p class="text-xs text-white/30">&copy; 2026 OUTDOOR PROJECT. All rights reserved.</p>
+        <span class="text-[var(--teal)] font-bold tracking-[0.3em] text-[10px]">23°58'N 120°58'E</span>
+    </div>
+</footer>
+
+<!-- 手機浮動按鈕 -->
+<a href="https://lin.ee/nsfyYPj" target="_blank" id="mobile-float-cta"
+   class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 bg-[#00B900] text-white rounded-full font-black flex items-center gap-2 shadow-2xl opacity-0 pointer-events-none translate-y-10 transition-all duration-500 md:hidden"
+   style="padding: 0 22px; height: 52px; white-space: nowrap;">
+    <i class="fa-brands fa-line text-xl"></i><span class="text-sm">LINE 免費諮詢</span>
+</a>
+
+<script>
+(function () {
+    'use strict';
+
+    const ITINERARIES = [
+        {
+            tag: '家族・奢華',
+            title: '日光東京 ∙ 神聖山林與質感都心',
+            desc: '搭乘東武新型特急 SPACIA X 頂級座艙。入住星級飯店，品嚐高評價和牛鐵板燒，為您全家安排一場最舒適的五日之旅。',
+            img: 'https://images.unsplash.com/photo-1542051841857-5f90071e7989?q=80&w=800',
+            features: ['SPACIA X 觀光特急頭等座', '香味亭和牛鐵板燒饗宴', 'teamLab 沉浸式藝術體驗']
+        },
+        {
+            tag: '運動・探險',
+            title: '南九州 ∙ 高空觀景與療癒溫泉',
+            desc: '獨家安排專屬小飛機 30 分鐘俯瞰櫻島活火山。享受世界唯一天然砂蒸溫泉。結合熱血探險與徹底放鬆。',
+            img: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=800',
+            features: ['小飛機俯瞰櫻島火山', '指宿天然砂蒸溫泉', '百年鰻魚飯職人料理']
+        },
+        {
+            tag: '極限・粉雪',
+            title: '北海道 ∙ 留壽都粉雪極限五日',
+            desc: '前進全球獎項肯定的留壽都雪場。專業中文教練駐場指導，從新手解鎖到野雪導覽，盡情享受北國雪境。',
+            img: 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?q=80&w=800',
+            features: ['留壽都雪場 Ski-in/out', '專業中文私人教練', '滑雪後的頂級螃蟹饗宴']
+        }
+    ];
+
+    const QUIZ_STEPS = [
+        {
+            q: "你對下一趟旅程的期待是？",
+            options: [
+                { label: "徹底放空", sub: "溫泉・美食・慢節奏", val: "chill", icon: "🍃" },
+                { label: "熱血冒險", sub: "雪場・潛水・飛行", val: "thrill", icon: "🏂" },
+                { label: "深度文化", sub: "神社・老街・職人", val: "culture", icon: "⛩️" },
+                { label: "質感奢旅", sub: "星級・饗宴・座艙", val: "luxe", icon: "🥂" }
+            ]
+        },
+        {
+            q: "一天的黃金時刻，你想這樣度過？",
+            options: [
+                { label: "清晨第一道光", sub: "山頭・海面・寧靜", val: "dawn", icon: "🌅" },
+                { label: "正午盡情探索", sub: "滑雪・躍入海洋", val: "active", icon: "☀️" },
+                { label: "夕陽與小酌", sub: "街區・居酒屋", val: "chill", icon: "🌆" },
+                { label: "深夜的星空", sub: "露天・溫泉・銀河", val: "zen", icon: "🌌" }
+            ]
+        }
+    ];
+
+    const DNA_RESULTS = {
+        chill: {
+            title: "溫泉漫遊者",
+            tag: "Onsen Wanderer",
+            desc: "你懂得放慢腳步對待自己。南九州的指宿砂蒸溫泉與職人級美食最適合您的頻率。",
+            traits: ["🍶 慢節奏", "🍣 職人食", "💆 零壓力"]
+        },
+        thrill: {
+            title: "腎上腺素玩家",
+            tag: "Adrenaline Seeker",
+            desc: "您渴望與大自然真實對話。北海道的頂級粉雪與南九州火山飛行正在召喚您的冒險魂。",
+            traits: ["🏂 粉雪極限", "🛩️ 飛行探險", "🔥 熱血十足"]
+        },
+        culture: {
+            title: "文化深潛者",
+            tag: "Culture Diver",
+            desc: "您對日本的迷戀不止於表面。日光神社、職人工藝與百年料亭，才是您真正想深入的世界。",
+            traits: ["⛩️ 神社巡禮", "🎨 職人工藝", "📖 深度在地"]
+        },
+        luxe: {
+            title: "質感旅人",
+            tag: "Luxury Traveler",
+            desc: "旅行是一種態度，不是一種妥協。頂級座艙、星級旅宿與饗宴級美食，才是您的出走標準。",
+            traits: ["🥂 頂級饗宴", "🚄 特急頭等", "🏨 星級住宿"]
+        }
+    };
+
+    // FAQ 資料
+    const FAQS = [
+        {
+            q: "最少幾個人可以報名？",
+            a: "我們的行程<strong>最低 2 人即可成行</strong>，非常適合情侶、夫妻或好友出遊。若您希望獨自出發，也歡迎透過 LINE 諮詢，我們會協助評估是否可安排單人方案或與他人拼團。"
+        },
+        {
+            q: "費用包含機票與住宿嗎？",
+            a: "行程規劃服務費<strong>不含機票</strong>。住宿部分依方案而定——「深度探索」與「全包奢旅」方案可包含住宿安排，我們會為您選定符合旅遊風格的旅館並完成訂房。詳細費用組成請透過 LINE 諮詢，我們會提供完整透明的報價明細。"
+        },
+        {
+            q: "教練是中文母語嗎？溝通會有問題嗎？",
+            a: "是的！我們合作的滑雪與潛水教練均為<strong>中文母語者</strong>，溝通零障礙。您可以用最自在的方式學習，不必擔心語言隔閡造成安全疑慮或學習效率降低。"
+        },
+        {
+            q: "我完全不會滑雪 / 潛水，可以參加考照課程嗎？",
+            a: "完全可以！我們的考照課程<strong>專為零基礎設計</strong>，教練會從最基礎的安全觀念開始教起。以滑雪為例，通常 3–5 天密集訓練即可完成初階考照；自由潛水考照課程約 2–3 天。建議在出發前透過 LINE 告知您的目標，讓我們為您安排最合適的課程規劃。"
+        },
+        {
+            q: "行程可以完全客製化嗎？",
+            a: "這正是出走計畫的核心精神。<strong>所有行程都是從零開始為您量身打造</strong>，沒有固定套裝，沒有不必要的強迫消費。從出發日期、住宿等級、飲食偏好到想體驗的活動，一切依您的喜好調整。"
+        },
+        {
+            q: "如何開始預約？流程是什麼？",
+            a: "整個流程很簡單：<strong>① 加入 LINE 並告知旅遊期間與人數 → ② 我們安排免費諮詢電話了解您的需求 → ③ 提供初步行程提案與費用估算 → ④ 確認細節後正式成行。</strong>從諮詢到出發，全程都有我們陪伴，不用擔心任何細節。"
+        },
+        {
+            q: "可以臨時更改行程或取消嗎？",
+            a: "出發前的行程調整在合理範圍內都可協商，我們會盡力配合您的需求。關於取消與退款政策，因涉及住宿、交通等第三方預訂，請在諮詢時詳細了解各方案的條款。原則上我們會以<strong>旅客權益為優先</strong>提供最大彈性。"
+        }
+    ];
+
+    let quizStep = 0;
+    let quizAnswers = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initItineraries();
+        initHero();
+        initQuiz();
+        initFAQ();
+        initAdvantages();
+        initReveal();
+        initNav();
+    });
+
+    function initNav() {
+        const nav = document.getElementById('navbar');
+        const hamBtn = document.getElementById('ham-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const floatCta = document.getElementById('mobile-float-cta');
+
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 50);
+            if (floatCta) {
+                floatCta.classList.toggle('show', window.scrollY > 400);
+                floatCta.style.pointerEvents = window.scrollY > 400 ? 'auto' : 'none';
+            }
+        });
+
+        hamBtn.addEventListener('click', () => {
+            const isOpen = mobileMenu.classList.toggle('opacity-100');
+            mobileMenu.classList.toggle('pointer-events-auto', isOpen);
+            mobileMenu.classList.toggle('translate-y-0', isOpen);
+            hamBtn.innerHTML = isOpen ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars-staggered"></i>';
+        });
+
+        document.querySelectorAll('.mob-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
+                hamBtn.innerHTML = '<i class="fa-solid fa-bars-staggered"></i>';
+            });
+        });
+    }
+
+    function initHero() {
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.sdot');
+        let current = 0;
+
+        window.goToSlide = (idx) => {
+            slides[current].classList.remove('active', 'opacity-100', 'z-10');
+            slides[current].classList.add('opacity-0', 'z-0');
+            dots[current].classList.remove('active', 'bg-white', 'w-12');
+            current = idx;
+            slides[current].classList.add('active', 'opacity-100', 'z-10');
+            slides[current].classList.remove('opacity-0', 'z-0');
+            dots[current].classList.add('active', 'bg-white', 'w-12');
+        };
+
+        setInterval(() => goToSlide((current + 1) % slides.length), 7000);
+    }
+
+    function initItineraries() {
+        const list = document.getElementById('itinerary-list');       // 桌機側欄
+        const pills = document.getElementById('itinerary-pills');     // 手機 pill
+
+        // 每筆行程的 icon 與短標
+        const META = [
+            { icon: 'fa-torii-gate',        short: '東京・日光' },
+            { icon: 'fa-volcano',           short: '南九州' },
+            { icon: 'fa-person-skiing',     short: '北海道' },
+        ];
+
+        ITINERARIES.forEach((item, idx) => {
+            // 桌機：側欄按鈕
+            const btn = document.createElement('button');
+            btn.className = `itinerary-btn p-6 rounded-2xl border-2 border-gray-100 text-left transition-all w-full ${idx === 0 ? 'active' : ''}`;
+            btn.innerHTML = `
+                <span class="block text-[10px] font-black text-[var(--teal)] uppercase tracking-widest mb-1">${item.tag}</span>
+                <span class="block font-bold text-[var(--brown)]">${item.title}</span>
+            `;
+            btn.onclick = () => switchItinerary(idx);
+            list.appendChild(btn);
+
+            // 手機：pill 按鈕
+            const pill = document.createElement('button');
+            pill.className = `itinerary-pill flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full border-2 text-sm font-bold transition-all whitespace-nowrap ${idx === 0 ? 'bg-[var(--teal)] border-[var(--teal)] text-white' : 'bg-white border-gray-200 text-[var(--brown)]'}`;
+            pill.innerHTML = `<i class="fa-solid ${META[idx].icon} text-xs"></i> ${META[idx].short}`;
+            pill.onclick = () => switchItinerary(idx);
+            pills.appendChild(pill);
+        });
+
+        switchItinerary(0);
+    }
+
+    function switchItinerary(idx) {
+        const data = ITINERARIES[idx];
+        const display = document.getElementById('itinerary-display');
+
+        // 桌機 active 狀態
+        document.querySelectorAll('.itinerary-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+
+        // 手機 pill active 狀態
+        document.querySelectorAll('.itinerary-pill').forEach((p, i) => {
+            if (i === idx) {
+                p.classList.add('bg-[var(--teal)]', 'border-[var(--teal)]', 'text-white');
+                p.classList.remove('bg-white', 'border-gray-200', 'text-[var(--brown)]');
+            } else {
+                p.classList.remove('bg-[var(--teal)]', 'border-[var(--teal)]', 'text-white');
+                p.classList.add('bg-white', 'border-gray-200', 'text-[var(--brown)]');
+            }
+        });
+
+        display.style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('disp-img').src = data.img;
+            document.getElementById('disp-tag').innerText = data.tag;
+            document.getElementById('disp-title').innerText = data.title;
+            document.getElementById('disp-desc').innerText = data.desc;
+            document.getElementById('disp-features').innerHTML = data.features.map(f => `
+                <div class="flex items-center gap-3 text-sm font-medium text-gray-600">
+                    <i class="fa-solid fa-circle-check text-[var(--teal)]"></i> ${f}
+                </div>
+            `).join('');
+            display.style.opacity = '1';
+        }, 300);
+    }
+
+    function initQuiz() { renderQuiz(); }
+
+    function renderQuiz() {
+        const container = document.getElementById('quiz-content');
+        const progress = document.getElementById('quiz-progress');
+
+        if (quizStep < QUIZ_STEPS.length) {
+            const step = QUIZ_STEPS[quizStep];
+            progress.style.width = `${(quizStep / QUIZ_STEPS.length) * 100}%`;
+            container.innerHTML = `
+                <h3 class="text-white text-xl md:text-2xl font-bold mb-8">${step.q}</h3>
+                <div class="grid grid-cols-2 gap-4 w-full">
+                    ${step.options.map(opt => `
+                        <button class="quiz-opt bg-white/5 border border-white/10 p-6 rounded-2xl text-center" onclick="handleQuizAnswer('${opt.val}')">
+                            <span class="text-3xl block mb-2">${opt.icon}</span>
+                            <span class="text-white block font-bold text-sm mb-1">${opt.label}</span>
+                            <span class="text-white/40 block text-[10px] font-light">${opt.sub}</span>
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+        } else {
+            progress.style.width = '100%';
+            const key = quizAnswers[0] || 'chill';
+            const res = DNA_RESULTS[key] || DNA_RESULTS.chill;
+            container.innerHTML = `
+                <div class="animate-bounce mb-6 text-5xl">✨</div>
+                <span class="text-[var(--teal)] text-xs font-bold tracking-widest uppercase mb-2 block">${res.tag}</span>
+                <h3 class="text-white text-3xl font-black mb-4">${res.title}</h3>
+                <p class="text-white/60 mb-8 font-light max-w-sm mx-auto">${res.desc}</p>
+                <div class="flex gap-2 mb-10 justify-center flex-wrap">
+                    ${res.traits.map(t => `<span class="bg-white/10 text-white text-[10px] px-3 py-1 rounded-full border border-white/10">${t}</span>`).join('')}
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="https://lin.ee/nsfyYPj" target="_blank" class="bg-[var(--teal)] text-white px-8 py-3 rounded-xl font-bold shadow-xl">預約專屬提案</a>
+                    <button class="text-white/40 text-xs hover:text-white transition-colors" onclick="resetQuiz()">再測一次</button>
+                </div>
+            `;
+        }
+    }
+
+    window.handleQuizAnswer = (val) => { quizAnswers.push(val); quizStep++; renderQuiz(); };
+    window.resetQuiz = () => { quizStep = 0; quizAnswers = []; renderQuiz(); };
+
+    // FAQ 手風琴
+    function initFAQ() {
+        const container = document.getElementById('faq-list');
+        container.innerHTML = FAQS.map((item, i) => `
+            <div class="faq-item">
+                <button class="faq-trigger" onclick="toggleFAQ(${i}, this)" aria-expanded="false">
+                    <span class="pr-4">${item.q}</span>
+                    <span class="faq-icon"><i class="fa-solid fa-plus text-sm text-[var(--brown)]"></i></span>
+                </button>
+                <div class="faq-body" id="faq-body-${i}">
+                    <p>${item.a}</p>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    window.toggleFAQ = (idx, btn) => {
+        const body = document.getElementById(`faq-body-${idx}`);
+        const isOpen = body.classList.contains('open');
+        // 關閉所有
+        document.querySelectorAll('.faq-body').forEach(b => b.classList.remove('open'));
+        document.querySelectorAll('.faq-trigger').forEach(b => { b.classList.remove('open'); b.setAttribute('aria-expanded', 'false'); });
+        // 開啟當前（若原本是關閉的）
+        if (!isOpen) {
+            body.classList.add('open');
+            btn.classList.add('open');
+            btn.setAttribute('aria-expanded', 'true');
+        }
+    };
+
+    // 優勢手風琴（手機）
+    const ADVANTAGES = [
+        { icon: 'fa-sliders',             iconBg: 'bg-[var(--teal-lt)]',   iconColor: 'text-[var(--teal)]',      title: '完全照您步調',  body: '幾點起床、想走幾天、要玩什麼——全部由您說了算，不用配合陌生人的日程。' },
+        { icon: 'fa-map-pin',             iconBg: 'bg-[var(--yellow-lt)]', iconColor: 'text-[var(--yellow-dk)]', title: '親踩過才推薦',  body: '我們不賣沒去過的地方。每一個景點、餐廳與住宿，都是教練親身體驗後嚴選。' },
+        { icon: 'fa-graduation-cap',      iconBg: 'bg-[var(--teal-lt)]',   iconColor: 'text-[var(--teal)]',      title: '邊玩邊考照',    body: '滑雪或自由潛水，旅途中就能完成考照。中文教練指導，安全零距離學習。' },
+        { icon: 'fa-users-between-lines', iconBg: 'bg-[var(--yellow-lt)]', iconColor: 'text-[var(--yellow-dk)]', title: '兩人就能出發',  body: '最少只需兩人，無需湊團等人。情侶、夫妻或好友，說走就走不將就。' },
+    ];
+
+    function initAdvantages() {
+        const container = document.getElementById('adv-accordion');
+        if (!container) return;
+        container.innerHTML = ADVANTAGES.map((a, i) => `
+            <div class="bg-white rounded-2xl overflow-hidden">
+                <button class="adv-trigger w-full flex items-center gap-4 px-5 py-4 text-left" onclick="toggleAdv(${i}, this)">
+                    <div class="w-10 h-10 ${a.iconBg} rounded-xl flex items-center justify-center ${a.iconColor} text-lg flex-shrink-0">
+                        <i class="fa-solid ${a.icon}"></i>
+                    </div>
+                    <span class="font-black text-sm text-[var(--brown)] flex-grow">${a.title}</span>
+                    <i class="fa-solid fa-chevron-down text-xs text-gray-400 transition-transform duration-300 adv-chevron"></i>
+                </button>
+                <div class="adv-body max-h-0 overflow-hidden transition-all duration-400" id="adv-body-${i}">
+                    <p class="px-5 pb-5 text-gray-500 text-sm font-light leading-relaxed">${a.body}</p>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    window.toggleAdv = (idx, btn) => {
+        const body = document.getElementById(`adv-body-${idx}`);
+        const chevron = btn.querySelector('.adv-chevron');
+        const isOpen = body.style.maxHeight && body.style.maxHeight !== '0px';
+        // 關閉所有
+        document.querySelectorAll('.adv-body').forEach(b => b.style.maxHeight = '0px');
+        document.querySelectorAll('.adv-chevron').forEach(c => c.style.transform = '');
+        // 開啟當前
+        if (!isOpen) {
+            body.style.maxHeight = body.scrollHeight + 'px';
+            chevron.style.transform = 'rotate(180deg)';
+        }
+    };
+
+    function initReveal() {
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+        }, { threshold: 0.08 });
+        reveals.forEach(r => observer.observe(r));
+    }
+
+})();
+</script>
+</body>
+</html>
